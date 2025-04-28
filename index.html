@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,12 +17,13 @@
 </head>
 <body>
     <div class="player-container">
+        <audio id="audio-player" style="display: none;"></audio>
+
         <div class="track-info">
             <div id="track-title" class="title"></div>
             <div id="track-artist" class="artist"></div>
         </div>
 
-        <!-- Add Time and Progress Bar -->
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar">
                 <div id="progress-fill" class="progress-fill"></div>
@@ -47,7 +49,6 @@
             </button>
         </div>
 
-        <!-- Add Volume Control -->
         <div class="volume-control">
             <button id="volume-btn" class="control-btn volume-btn">
                 <!-- Volume icon will be dynamically added by JS -->
