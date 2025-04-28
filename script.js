@@ -7,8 +7,8 @@ const tracks = [
 let currentTrackIndex = 0;
 let isPlaying = false;
 
-let currentVolume = 75;
-let lastVolume = 75;
+let currentVolume = 100; 
+let lastVolume = 100; 
 let isMuted = false;
 
 const audio = new Audio(); 
@@ -218,11 +218,11 @@ function toggleMute() {
     isMuted = !isMuted;
 
     if (isMuted) {
-        lastVolume = audio.volume * 100 > 0 ? audio.volume * 100 : 75;
+        lastVolume = audio.volume * 100 > 0 ? audio.volume * 100 : 100;
         audio.muted = true; 
         volumeSlider.value = 0;
     } else {
-        const restoredVolume = lastVolume > 0 ? lastVolume : 50;
+        const restoredVolume = lastVolume > 0 ? lastVolume : 100;
         audio.muted = false;
         audio.volume = restoredVolume / 100; 
         volumeSlider.value = restoredVolume;
