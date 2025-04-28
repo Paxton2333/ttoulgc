@@ -28,15 +28,33 @@ body {
 .player-container {
     background-color: var(--secondary-color);
     padding: 30px;
-    border-radius: 5px; 
-    box-shadow: 0 0 15px var(--accent-color), 0 0 10px var(--highlight-color) inset; 
-    border: 2px solid var(--border-color); 
+    border-radius: 5px;
+    box-shadow: 0 0 15px var(--accent-color), 0 0 10px var(--highlight-color) inset;
+    border: 2px solid var(--border-color);
     text-align: center;
     max-width: 400px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* Style for the new clock container */
+.clock-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px; /* Space below the clock */
+    border: 1px dashed var(--border-color); /* Add border similar to titles */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.clock {
+    font-family: 'Share Tech Mono', monospace; /* Use mono font for numbers */
+    font-size: 1.5em; /* Make it prominent */
+    color: var(--highlight-color); /* Highlight color for the clock */
+    letter-spacing: 2px; /* Space out the digits */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* Soft glow effect */
 }
 
 .track-info {
@@ -141,7 +159,7 @@ body {
     width: 100%; /* Match player width */
     padding: 0 20px; /* Align with track-info padding */
     box-sizing: border-box;
-    margin-bottom: 20px;
+    margin-bottom: 20px; /* Add margin-bottom */
 }
 
 .volume-btn {
@@ -212,6 +230,68 @@ body {
    border: 1px solid var(--primary-color); /* Add border for definition */
 }
 
+.playmode-container {
+    width: 100%;
+    text-align: left;
+    margin-top: 20px; 
+}
+
+.playmode-container h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 5px;
+    color: var(--accent-color);
+}
+
+.mode-control {
+    width: 100%;
+    padding: 0 20px; 
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 0;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    gap: 20px; 
+}
+
+.mode-btn {
+     padding: 8px 15px; 
+     font-family: 'Press Start 2P', cursive; 
+     font-size: 0.9em;
+     color: var(--primary-color); 
+     background-color: var(--border-color); 
+     border: 1px solid var(--accent-color); 
+     box-shadow: 0 0 5px var(--accent-color); 
+}
+
+.mode-btn:hover {
+    background-color: var(--highlight-color); 
+    box-shadow: 0 0 8px var(--highlight-color); 
+}
+
+.download-btn {
+    padding: 8px 15px; 
+    font-size: 0.9em;
+    color: var(--primary-color);
+    background-color: var(--border-color);
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+}
+
+.download-btn:hover {
+    background-color: var(--highlight-color);
+    box-shadow: 0 0 8px var(--highlight-color);
+}
+
+.download-btn svg {
+    width: 18px; 
+    height: 18px;
+    fill: currentColor;
+}
+
 .playlist-container {
     width: 100%;
     text-align: left;
@@ -220,11 +300,11 @@ body {
 
 .playlist-container h2 {
     font-family: 'Press Start 2P', cursive;
-    font-size: 1em; 
+    font-size: 1em;
     margin-bottom: 15px;
-    border-bottom: 1px dashed var(--border-color); 
+    border-bottom: 1px dashed var(--border-color);
     padding-bottom: 5px;
-    color: var(--accent-color); 
+    color: var(--accent-color);
 }
 
 .playlist {
