@@ -21,6 +21,7 @@ const nextBtn = document.getElementById('next-btn');
 const playlistUl = document.getElementById('playlist-ul');
 const modeBtn = document.getElementById('mode-btn'); 
 const downloadBtn = document.getElementById('download-btn');
+const currentClockElement = document.getElementById('current-clock');
 
 const progressBar = document.getElementById('progress-bar');
 const progressFill = document.getElementById('progress-fill');
@@ -322,6 +323,15 @@ function downloadCurrentTrack() {
      console.log(`Attempting to download: ${link.download} from ${link.href}`);
 }
 
+// --- Clock Functionality ---
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    currentClockElement.textContent = `${hours}:${minutes}:${seconds}`;
+}
+
 audio.addEventListener('play', () => {
     isPlaying = true;
     updatePlayPauseButton();
@@ -391,6 +401,7 @@ volumeSlider.addEventListener('input', handleVolumeChange);
 modeBtn.addEventListener('click', cyclePlaybackMode); // Add event listener for mode button
 downloadBtn.addEventListener('click', downloadCurrentTrack); // Add event listener for download button
 
+// --- Initial Setup ---
 renderPlaylist();
 loadTrack(currentTrackIndex); // Load the initial track
 
@@ -400,3 +411,7 @@ updateVolumeIcon();
 updateVolumeSliderBackground();
 updateModeButton(); // Initialize mode button display
 updateDownloadButton(); // Initialize download button display
+
+// Initialize and start the clock
+updateClock();
+setInterval(updateClock, 1000); // Update clock every second
