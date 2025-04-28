@@ -19,6 +19,8 @@ const prevBtn = document.getElementById('prev-btn');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const nextBtn = document.getElementById('next-btn');
 const playlistUl = document.getElementById('playlist-ul');
+const modeBtn = document.getElementById('mode-btn'); 
+const downloadBtn = document.getElementById('download-btn');
 
 const progressBar = document.getElementById('progress-bar');
 const progressFill = document.getElementById('progress-fill');
@@ -55,6 +57,22 @@ const volumeMuteIcon = `
     </svg>
 `;
 
+const downloadIcon = `
+    <svg viewBox="0 0 24 24">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+    </svg>
+`;
+
+// Define playback modes
+const PlaybackModes = {
+    NORMAL: 'Normal',
+    LOOP: 'Loop', // Loop current track
+    RANDOM: 'Random', // Play random track after current ends
+    STOP: 'Stop' // Stop after current track ends
+};
+
+let currentMode = PlaybackModes.NORMAL; // Initial mode
+
 function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
@@ -81,6 +99,7 @@ function loadTrack(index) {
 
     updatePlaylistHighlight();
     updatePlayPauseButton(); 
+    updateDownloadButton(); // Update download button state
 
     audio.addEventListener('loadedmetadata', () => {
         totalTimeElement.textContent = formatTime(audio.duration);
@@ -107,10 +126,37 @@ function playPause() {
     }
 }
 
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    loadTrack(currentTrackIndex);
-    console.log('Next track');
+function nextTrack(isRandom = false) {
+    if (tracks.length === 0) return;
+
+    let nextIndex = currentTrackIndex;
+
+    if (isRandom) {
+        if (tracks.length <= 1) {
+             // If only one track, just play it again (or do nothing if already playing)
+            if (isPlaying) {
+                 audio.currentTime = 0;
+                 audio.play();
+            } else {
+                 loadTrack(currentTrackIndex);
+            }
+            return; // Stay on the current track and handle loop/stop via ended listener
+        }
+        // Pick a random index different from the current one
+        while (nextIndex === currentTrackIndex) {
+            nextIndex = Math.floor(Math.random() * tracks.length);
+        }
+    } else {
+        // Normal mode or loop mode (loop handled in 'ended')
+        nextIndex = (currentTrackIndex + 1) % tracks.length;
+    }
+
+    loadTrack(nextIndex);
+     // Only auto-play if it was playing before the track ended
+    if (isPlaying) { // isPlaying is only false after audio.pause() or ended handler sets it
+         audio.play();
+    }
+    console.log('Moving to track index', nextIndex);
 }
 
 function prevTrack() {
@@ -234,6 +280,48 @@ function toggleMute() {
     console.log(isMuted ? 'Muted' : `Unmuted, volume: ${currentVolume}`);
 }
 
+function updateModeButton() {
+    modeBtn.textContent = currentMode.charAt(0); // Display first letter
+    modeBtn.title = `Playback Mode: ${currentMode}`;
+    // Optional: Add visual styling based on mode
+    // modeBtn.classList.remove('mode-normal', 'mode-loop', 'mode-random', 'mode-stop');
+    // modeBtn.classList.add(`mode-${currentMode.toLowerCase()}`);
+}
+
+function cyclePlaybackMode() {
+    const modes = Object.values(PlaybackModes);
+    const currentIndex = modes.indexOf(currentMode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+    currentMode = modes[nextIndex];
+    updateModeButton();
+    console.log('Playback mode changed to', currentMode);
+}
+
+function updateDownloadButton() {
+     // For now, just ensure the icon is there.
+     // We could potentially disable it if there are no tracks, but that's already handled by tracks.length check.
+     downloadBtn.innerHTML = downloadIcon;
+     // The download logic will get the current track info when clicked
+}
+
+function downloadCurrentTrack() {
+     if (tracks.length === 0) {
+         console.log("No tracks to download.");
+         return;
+     }
+     const track = tracks[currentTrackIndex];
+     const link = document.createElement('a');
+     link.href = track.src;
+     // Construct the filename using the track title and add .mp3 extension
+     // Replace characters that might be problematic in filenames (optional but good practice)
+     const cleanTitle = track.title.replace(/[^\w\s.-]/g, '').trim();
+     link.download = `${cleanTitle}.mp3`;
+     document.body.appendChild(link); // Append to body is necessary for Firefox
+     link.click(); // Simulate click
+     document.body.removeChild(link); // Clean up the temporary link
+     console.log(`Attempting to download: ${link.download} from ${link.href}`);
+}
+
 audio.addEventListener('play', () => {
     isPlaying = true;
     updatePlayPauseButton();
@@ -247,8 +335,28 @@ audio.addEventListener('pause', () => {
 });
 
 audio.addEventListener('ended', () => {
-    console.log('Track ended');
-    nextTrack(); 
+    console.log('Track ended. Current mode:', currentMode);
+    switch (currentMode) {
+        case PlaybackModes.NORMAL:
+            nextTrack(); // Play the next track in sequence
+            break;
+        case PlaybackModes.LOOP:
+            audio.currentTime = 0; // Reset time to start
+            audio.play(); // Play the current track again
+            console.log('Looping track');
+            break;
+        case PlaybackModes.RANDOM:
+            nextTrack(true); // Play a random track
+            break;
+        case PlaybackModes.STOP:
+            isPlaying = false; // Set isPlaying to false
+            updatePlayPauseButton(); // Update play/pause button to show play icon
+            audio.currentTime = 0; // Optionally reset time and progress bar
+            updateProgressBar();
+            console.log('Stopping after current track');
+            // Do not load/play next track
+            break;
+    }
 });
 
 audio.addEventListener('timeupdate', () => {
@@ -277,14 +385,18 @@ audio.addEventListener('loadedmetadata', () => {
 
 prevBtn.addEventListener('click', prevTrack);
 playPauseBtn.addEventListener('click', playPause);
-nextBtn.addEventListener('click', nextTrack);
+nextBtn.addEventListener('click', () => nextTrack(currentMode === PlaybackModes.RANDOM)); // Next button plays next in sequence UNLESS in Random mode
 volumeBtn.addEventListener('click', toggleMute);
-volumeSlider.addEventListener('input', handleVolumeChange); 
+volumeSlider.addEventListener('input', handleVolumeChange);
+modeBtn.addEventListener('click', cyclePlaybackMode); // Add event listener for mode button
+downloadBtn.addEventListener('click', downloadCurrentTrack); // Add event listener for download button
 
 renderPlaylist();
-loadTrack(currentTrackIndex); 
+loadTrack(currentTrackIndex); // Load the initial track
 
 volumeSlider.value = currentVolume;
 audio.volume = currentVolume / 100; 
 updateVolumeIcon();
 updateVolumeSliderBackground();
+updateModeButton(); // Initialize mode button display
+updateDownloadButton(); // Initialize download button display
