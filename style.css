@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+    --primary-color: #141f2d; 
+    --secondary-color: #1a2b3c; 
+    --accent-color: #00ffff; 
+    --highlight-color: #ff00ff; 
+    --text-color: #00ff00; 
+    --light-text-color: #008080; 
+    --hover-color: #2a3b4c; 
+    --border-color: #008080; 
+}
+
+body {
+    margin: 0;
+    font-family: 'Share Tech Mono', monospace; 
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.player-container {
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 5px; 
+    box-shadow: 0 0 15px var(--accent-color), 0 0 10px var(--highlight-color) inset; 
+    border: 2px solid var(--border-color); 
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.track-info {
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    width: calc(100% - 20px); 
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.2); 
+}
+
+.track-info .title {
+    font-family: 'Press Start 2P', cursive; 
+    font-size: 1.1em; 
+    font-weight: normal; 
+    margin-bottom: 8px; 
+    color: var(--accent-color); 
+    word-break: break-word; 
+}
+
+.track-info .artist {
+    font-size: 0.9em;
+    color: var(--light-text-color); 
+    word-break: break-word; 
+}
+
+.progress-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px; 
+    background-color: rgba(0, 0, 0, 0.3); 
+    border: 1px solid var(--border-color);
+    border-radius: 4px; 
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 5px;
+    position: relative; /* Needed for fill positioning */
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%; /* Initial width */
+    background-color: var(--accent-color); 
+    transition: width 0.1s linear; /* Smooth but responsive update */
+}
+
+.time-display {
+    font-size: 0.8em;
+    color: var(--light-text-color);
+    text-align: right;
+    width: 100%;
+    padding-right: 2px;
+    box-sizing: border-box;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px; 
+    margin-bottom: 30px;
+}
+
+.control-btn {
+    background-color: var(--border-color); 
+    border: none;
+    color: var(--primary-color); 
+    cursor: pointer;
+    padding: 12px; 
+    border-radius: 3px; 
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px var(--accent-color); 
+}
+
+.control-btn:hover {
+    background-color: var(--highlight-color); 
+    box-shadow: 0 0 8px var(--highlight-color); 
+}
+
+.control-btn svg {
+    width: 20px; 
+    height: 20px;
+    fill: currentColor; 
+}
+
+.control-btn.large svg {
+    width: 32px; 
+    height: 32px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%; /* Match player width */
+    padding: 0 20px; /* Align with track-info padding */
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.volume-btn {
+    padding: 8px; /* Smaller padding for icon */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.volume-btn svg {
+    width: 18px; /* Smaller icon */
+    height: 18px;
+}
+
+.volume-slider {
+    flex-grow: 1; /* Take available space */
+    -webkit-appearance: none; /* Override default appearance */
+    appearance: none;
+    height: 10px; /* Adjust height slightly due to border */
+    background: var(--border-color); 
+    outline: none;
+    opacity: 0.9;
+    transition: opacity .2s;
+    border-radius: 0px; /* Sharper corners */
+    position: relative; /* For background gradient fill */
+    border: 1px solid var(--border-color); /* Add a border */
+    box-sizing: border-box; /* Include border in size */
+}
+
+.volume-slider:hover {
+  opacity: 1;
+}
+
+.volume-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px; /* Match total slider height minus border */
+  cursor: pointer;
+  background: none; /* Track background handled by parent linear-gradient */
+  border-radius: 0px;
+}
+
+.volume-slider::-moz-range-track {
+  width: 100%;
+  height: 8px; /* Match total slider height minus border */
+  cursor: pointer;
+  background: none; /* Track background handled by parent linear-gradient */
+  border-radius: 0px;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px; /* Slightly smaller, squarish thumb */
+  height: 12px;
+  background: var(--highlight-color); 
+  cursor: pointer;
+  border-radius: 1px; /* Squarish */
+  margin-top: -3px; /* Center the thumb vertically */
+  box-shadow: 0 0 3px var(--accent-color);
+  border: 1px solid var(--primary-color); /* Add border for definition */
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--highlight-color);
+  cursor: pointer;
+  border-radius: 1px; /* Squarish */
+  box-shadow: 0 0 3px var(--accent-color);
+   border: 1px solid var(--primary-color); /* Add border for definition */
+}
+
+.playlist-container {
+    width: 100%;
+    text-align: left;
+    margin-top: 20px; 
+}
+
+.playlist-container h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em; 
+    margin-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color); 
+    padding-bottom: 5px;
+    color: var(--accent-color); 
+}
+
+.playlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 180px; 
+    overflow-y: auto;
+    border: 1px solid var(--border-color); 
+    background-color: rgba(0, 0, 0, 0.1); 
+    padding: 5px; 
+}
+
+.playlist::-webkit-scrollbar {
+  width: 8px;
+}
+
+.playlist::-webkit-scrollbar-track {
+  background: var(--secondary-color); 
+  border-radius: 4px;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+  background: var(--light-text-color); 
+  border-radius: 4px;
+}
+
+.playlist::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color); 
+}
+
+.playlist li {
+    padding: 8px 5px; 
+    border-bottom: 1px dashed var(--hover-color); 
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+    color: var(--text-color); 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.playlist li:last-child {
+    border-bottom: none;
+}
+
+.playlist li:hover {
+    background-color: var(--hover-color);
+    color: var(--highlight-color); 
+}
+
+.playlist li.active {
+    color: var(--highlight-color); 
+    background-color: var(--hover-color); 
+    font-weight: normal; 
+}
+
+.playlist li .track-title {
+    display: inline; 
+    color: inherit; 
+    margin-right: 5px; 
+}
+
+.playlist li .track-artist {
+    display: inline; 
+    font-size: 0.8em;
+    color: var(--light-text-color); 
+}
+
+.track-info .title::after {
+    content: '_';
+    animation: blink-caret .75s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from, to { color: transparent }
+  50% { color: var(--accent-color); }
+}

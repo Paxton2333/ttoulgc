@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P4XT0N Series Legacy</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+                // Add imports for any libraries if needed later, e.g.,
+                // "howler": "https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"
+            }
+        }
+    </script>
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div class="player-container">
+        <div class="track-info">
+            <div id="track-title" class="title"></div>
+            <div id="track-artist" class="artist"></div>
+        </div>
+
+        <!-- Add Time and Progress Bar -->
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="time-display">
+                <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prev-btn" class="control-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+            </button>
+            <button id="play-pause-btn" class="control-btn large">
+                <!-- SVG icon will be dynamically added by JS -->
+            </button>
+            <button id="next-btn" class="control-btn">
+                 <svg viewBox="0 0 24 24">
+                    <path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Add Volume Control -->
+        <div class="volume-control">
+            <button id="volume-btn" class="control-btn volume-btn">
+                <!-- Volume icon will be dynamically added by JS -->
+            </button>
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="75">
+        </div>
+
+        <div class="playlist-container">
+            <h2>Playlist</h2>
+            <ul id="playlist-ul" class="playlist">
+                <!-- Playlist items will be added by JS -->
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
