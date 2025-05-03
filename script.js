@@ -1,3 +1,14 @@
+// Add a message that appears in the console when dev tools are opened
+// This uses a common technique where accessing a property triggers a getter function.
+// Developer tools often access global properties like window when the console is inspected.
+Object.defineProperty(window, '_333Watching', {
+    get: function() {
+        console.log("DONT DO ANYTHING. 333 WATCHING");
+        // Return a value, though it's not typically used when accessed by dev tools
+        return undefined;
+    }
+});
+
 const tracks = [
     { title: 'Misma Void', artist: 'P4XT0N Series', src: 'mismavoid.mp3' },
     { title: 'Infinitus Galaxy', artist: 'P4XT0N Series', src: 'infinitusgalaxy.mp3' },
