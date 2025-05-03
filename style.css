@@ -384,3 +384,90 @@ body {
   from, to { color: transparent }
   50% { color: var(--accent-color); }
 }
+
+/* Style for the Secret Button */
+#secret-btn {
+    position: fixed; /* Fixed position relative to the viewport */
+    bottom: 15px; /* Distance from the bottom */
+    left: 15px; /* Distance from the left */
+    width: 40px; /* Small size */
+    height: 40px; /* Small size */
+    border-radius: 5px; /* Slightly rounded corners */
+    background-color: var(--border-color); /* Button background */
+    color: var(--primary-color); /* Text color */
+    font-family: 'Press Start 2P', cursive; /* Retro font */
+    font-size: 1.2em; /* Font size */
+    display: flex; /* Center the 'S' */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    cursor: pointer; /* Indicate it's clickable */
+    border: 2px solid var(--accent-color); /* Border */
+    box-shadow: 0 0 8px var(--accent-color); /* Glow effect */
+    opacity: 0; /* Start hidden */
+    pointer-events: none; /* Make it non-interactive when hidden */
+    transition: opacity 0.3s ease-in-out; /* Smooth transition for showing/hiding */
+    z-index: 1000; /* Ensure it's on top of other content */
+}
+
+#secret-btn:hover {
+    background-color: var(--highlight-color); /* Hover effect */
+    box-shadow: 0 0 12px var(--highlight-color); /* Enhanced glow on hover */
+}
+
+/* --- Custom Modal Styles --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Higher than secret button */
+    backdrop-filter: blur(5px); /* Optional blur effect */
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px var(--accent-color), 0 0 10px var(--highlight-color) inset;
+    border: 2px solid var(--border-color);
+    text-align: center;
+    max-width: 300px;
+    width: 90%;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-color);
+}
+
+#modal-question {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1em;
+    color: var(--accent-color);
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.modal-buttons .control-btn {
+    padding: 10px 20px;
+    font-size: 0.9em;
+     font-family: 'Press Start 2P', cursive;
+     box-shadow: 0 0 5px var(--accent-color);
+}
+
+.modal-buttons .control-btn:hover {
+     box-shadow: 0 0 8px var(--highlight-color);
+}
