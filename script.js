@@ -37,6 +37,11 @@ const playlistUl = document.getElementById('playlist-ul');
 const modeBtn = document.getElementById('mode-btn');
 const downloadBtn = document.getElementById('download-btn');
 const currentClockElement = document.getElementById('current-clock');
+const secretBtn = document.getElementById('secret-btn'); 
+const customConfirmModal = document.getElementById('custom-confirm-modal');
+const modalQuestion = document.getElementById('modal-question');
+const modalYesBtn = document.getElementById('modal-yes-btn');
+const modalNoBtn = document.getElementById('modal-no-btn');
 
 const progressBar = document.getElementById('progress-bar');
 const progressFill = document.getElementById('progress-fill');
@@ -417,7 +422,6 @@ function downloadCurrentTrack() {
      console.log(`Attempting to download: ${link.download} from ${link.href}`);
 }
 
-
 // --- Clock Functionality ---
 function updateClock() {
     const now = new Date();
@@ -425,6 +429,70 @@ function updateClock() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     currentClockElement.textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+// --- Secret Button & Custom Modal Functionality ---
+const proximityZone = 80;
+
+function checkMouseProximity(e) {
+    // Only show if the modal is NOT currently visible
+    if (customConfirmModal.classList.contains('hidden')) {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const viewportHeight = window.innerHeight;
+
+        // Check if mouse is within the bottom-left zone
+        const isNear = mouseX < proximityZone && mouseY > viewportHeight - proximityZone;
+
+        if (isNear) {
+            secretBtn.style.opacity = 1;
+            secretBtn.style.pointerEvents = 'auto'; // Enable clicks when visible
+        } else {
+            secretBtn.style.opacity = 0;
+            secretBtn.style.pointerEvents = 'none'; // Disable clicks when hidden
+        }
+    } else {
+         // If modal is visible, keep secret button hidden and non-interactive
+         secretBtn.style.opacity = 0;
+         secretBtn.style.pointerEvents = 'none';
+    }
+}
+
+function showCustomConfirm(question, onYes, onNo) {
+    modalQuestion.textContent = question;
+    // Remove previous listeners to avoid duplicates
+    modalYesBtn.removeEventListener('click', handleModalYes);
+    modalNoBtn.removeEventListener('click', handleModalNo);
+
+    // Store callbacks temporarily
+    modalYesBtn.dataset.callbackYes = 'true'; // Simple flag or store callback reference if needed
+    modalNoBtn.dataset.callbackNo = 'true';
+
+    // Add new listeners that will call the provided callbacks
+    modalYesBtn.addEventListener('click', handleModalYes = () => {
+        hideCustomConfirm();
+        if (onYes) onYes();
+    });
+    modalNoBtn.addEventListener('click', handleModalNo = () => {
+        hideCustomConfirm();
+        if (onNo) onNo();
+    });
+
+    customConfirmModal.classList.remove('hidden');
+    // Hide the secret button while the modal is open
+    secretBtn.style.opacity = 0;
+    secretBtn.style.pointerEvents = 'none';
+}
+
+// Temporary dummy functions to allow removal before assignment
+let handleModalYes = () => {};
+let handleModalNo = () => {};
+
+
+function hideCustomConfirm() {
+    customConfirmModal.classList.add('hidden');
+     // Re-enable mouse tracking for the secret button zone once modal is hidden
+     checkMouseProximity({ clientX: -1, clientY: -1 }); // Trigger an initial check to hide button if mouse is far
 }
 
 audio.addEventListener('play', () => {
@@ -505,16 +573,6 @@ audio.addEventListener('volumechange', () => {
     }
 });
 
-audio.addEventListener('loadedmetadata', () => {
-     // This listener is now managed within loadTrack using { once: true }
-     // to prevent duplicate listeners if loadTrack is called multiple times.
-     // The code here is kept for clarity but the main logic is in loadTrack.
-    totalTimeElement.textContent = formatTime(audio.duration);
-    currentTimeElement.textContent = formatTime(0);
-    progressFill.style.width = '0%';
-});
-
-
 // Event Listeners
 prevBtn.addEventListener('click', prevTrack);
 playPauseBtn.addEventListener('click', playPause);
@@ -524,6 +582,31 @@ volumeBtn.addEventListener('click', toggleMute);
 volumeSlider.addEventListener('input', handleVolumeChange); // 'input' is better for real-time updates than 'change'
 modeBtn.addEventListener('click', cyclePlaybackMode); // Add event listener for mode button
 downloadBtn.addEventListener('click', downloadCurrentTrack); // Add event listener for download button
+
+// Modify the secret button click listener to show the custom modal
+secretBtn.addEventListener('click', () => {
+    showCustomConfirm("Do you want to go to P4XT0N Series?",
+        () => { // Yes callback
+            window.location.href = "https://paxton2333.github.io/ttou";
+        },
+        () => { // No callback
+            // Do nothing
+            console.log("User cancelled redirection.");
+        }
+    );
+});
+
+// Optional: Allow clicking outside the modal content to close it (like clicking the overlay)
+customConfirmModal.addEventListener('click', (e) => {
+    if (e.target === customConfirmModal) {
+        hideCustomConfirm();
+        console.log("Modal closed by clicking overlay.");
+         // Call the "No" action equivalent if closing via overlay is considered a cancellation
+         // Or just hide it without action, depending on desired UX. Let's just hide for now.
+    }
+});
+
+document.body.addEventListener('mousemove', checkMouseProximity);
 
 // --- Initial Setup ---
 renderPlaylist();
@@ -541,7 +624,6 @@ if (tracks.length > 0) {
     nextBtn.disabled = true;
     downloadBtn.disabled = true;
 }
-
 
 // Initialize volume slider, icon, and background
 volumeSlider.value = currentVolume; // Set slider position based on initial currentVolume (100)
